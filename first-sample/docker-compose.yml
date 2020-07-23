@@ -1,12 +1,15 @@
 version: "3.8"
   
 services:  
-  study-grpc:  
-    build: . 
-    container_name: "grpc-first-sample-cont"
-    image_name: "grpc-first-sample-img"
+  first-sample:  
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: grpc-first-sample-img
+    container_name: grpc-first-sample-cont
     ports:
-      - 9999:9999 
+      - 9999:9999
+    command: sh
+    tty: true
     volumes:
       - .:/first-sample
-    command: bash
