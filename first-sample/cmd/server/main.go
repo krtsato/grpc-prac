@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"errors"
-	cat "first-sample/api"
+	cat "grpc-samples/first-sample/api/catpb"
 	"log"
 	"net"
 

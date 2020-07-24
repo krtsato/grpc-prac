@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	cat "first-sample/api"
 	"fmt"
+	cat "grpc-samples/first-sample/api/catpb"
 	"log"
 
 	"google.golang.org/grpc"
