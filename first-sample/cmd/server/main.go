@@ -3,24 +3,30 @@ package main
 import (
 	"context"
 	"errors"
-	cat "grpc-samples/first-sample/api/catpb"
+	catpb "grpc-samples/first-sample/api/catpb"
 	"log"
 	"net"
 
 	"google.golang.org/grpc"
 )
 
+const port = ":9999"
+
 type myCatService struct{}
 
-func (s *myCatService) GetMyCat(ctx context.Context, message *cat.GetMyCatMessage) (*cat.MyCatResponse, error) {
+/*
+	Context は API 境界を跨いだアクセスに用いる
+	e.g. キャンセルフラグ，リクエストごとの変数，リクエストのデッドライン
+*/
+func (s *myCatService) GetMyCat(ctx context.Context, message *catpb.GetMyCatMessage) (*catpb.MyCatResponse, error) {
 	switch message.TargetCat {
 	case "tama":
-		return &cat.MyCatResponse{
+		return &catpb.MyCatResponse{
 			Name: "tama",
 			Kind: "Maine Coon",
 		}, nil
 	case "mike":
-		return &cat.MyCatResponse{
+		return &catpb.MyCatResponse{
 			Name: "mike",
 			Kind: "Norwegian Forest Cat",
 		}, nil
@@ -30,13 +36,15 @@ func (s *myCatService) GetMyCat(ctx context.Context, message *cat.GetMyCatMessag
 }
 
 func main() {
-	port, err := net.Listen("tcp", ":9999")
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
-		log.Fatal("listening port error: ", err.Error())
-		return
+		log.Fatalln("Listening port error: ", err.Error())
 	}
 
-	s := grpc.NewServer()
-	cat.RegisterCatServer(s, &myCatService{})
-	s.Serve(port)
+	grpcServer := grpc.NewServer()
+	catpb.RegisterCatServer(grpcServer, &myCatService{})
+	err := grpcServer.Serve(lis)
+	if err != nil {
+		log.Fatalln("gRPC server error: ", err.Error())
+	}
 }

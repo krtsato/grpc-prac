@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package catpb;
-
 option go_package = "api/catpb";
 
 service Cat {
