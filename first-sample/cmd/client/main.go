@@ -11,11 +11,11 @@ import (
 
 const address = "localhost:9999"
 
-func main() {
+func run() error {
 	// gRPC コネクション作成
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalln("gRPC dial error: ", err)
+		return err
 	}
 	defer conn.Close()
 
@@ -26,7 +26,15 @@ func main() {
 	// データ取得
 	res, err := client.GetMyCat(context.Background(), message)
 	if err != nil {
-		log.Fatal("getting cat error: ", err)
+		return err
 	}
-	fmt.Printf("result: %s\n", res)
+
+	fmt.Printf("Result: %s\n", res)
+	return nil
+}
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatalln(err.Error())
+	}
 }

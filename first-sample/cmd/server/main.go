@@ -33,16 +33,28 @@ func (s *myCatService) GetMyCat(ctx context.Context, message *catpb.GetMyCatMess
 	}
 }
 
-func main() {
+func run() error {
+	// Listen 状態を開始
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
-		log.Fatalln("Listening port error: ", err.Error())
+		return err
 	}
 
+	// gRPC サーバを初期化・登録
 	grpcServer := grpc.NewServer()
 	catpb.RegisterCatServer(grpcServer, &myCatService{})
-	err := grpcServer.Serve(lis)
+
+	// gRPC サーバを起動
+	err = grpcServer.Serve(lis)
 	if err != nil {
-		log.Fatalln("gRPC server error: ", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatalln(err.Error())
 	}
 }
