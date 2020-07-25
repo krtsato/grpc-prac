@@ -14,10 +14,8 @@ const port = ":9999"
 
 type myCatService struct{}
 
-/*
-	Context は API 境界を跨いだアクセスに用いる
-	e.g. キャンセルフラグ，リクエストごとの変数，リクエストのデッドライン
-*/
+// Context は API 境界を跨いだアクセスに用いる
+// e.g. キャンセルフラグ，リクエストごとの変数，リクエストのデッドライン
 func (s *myCatService) GetMyCat(ctx context.Context, message *catpb.GetMyCatMessage) (*catpb.MyCatResponse, error) {
 	switch message.TargetCat {
 	case "tama":
