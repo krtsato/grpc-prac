@@ -1,0 +1,15 @@
+version: "3.8"
+  
+services:  
+  reverse-proxy-sample:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: grpc-reverse-proxy-sample-img
+    container_name: grpc-reverse-proxy-sample-cont
+    ports:
+      - 9998:9998
+    command: sh
+    tty: true
+    volumes:
+      - .:/reverse-proxy-sample
