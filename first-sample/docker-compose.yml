@@ -3,7 +3,7 @@ version: "3.8"
 services:  
   first-sample:  
     build:
-      context: ./docker
+      context: ./build/docker
       dockerfile: Dockerfile
     image: grpc-first-sample-img
     container_name: grpc-first-sample-cont

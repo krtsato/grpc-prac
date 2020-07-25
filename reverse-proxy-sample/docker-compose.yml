@@ -3,7 +3,7 @@ version: "3.8"
 services:  
   reverse-proxy-sample:
     build:
-      context: ./docker
+      context: ./build/docker
       dockerfile: Dockerfile
     image: grpc-reverse-proxy-sample-img
     container_name: grpc-reverse-proxy-sample-cont
