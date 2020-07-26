@@ -25,7 +25,7 @@ Go + gRPC に入門する
 - markdown 形式は出力コードが汚いため忌避
 
 ```zsh
-% protoc --doc_out=html,cat.html:./docs ./api/catpb/*.proto
+% protoc --doc_out=html,cat.html:./api/catpb ./api/catpb/*.proto
 ```
 
 - cmd/server/main.go を書く
