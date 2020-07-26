@@ -1,10 +1,10 @@
 version: "3.8"
-  
-services:  
-  first-sample:  
+
+services:
+  first-sample:
     build:
-      context: ./build/docker
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: build/docker/Dockerfile
     image: grpc-first-sample-img
     container_name: grpc-first-sample-cont
     ports:
