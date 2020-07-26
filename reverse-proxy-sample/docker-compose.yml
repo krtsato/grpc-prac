@@ -8,9 +8,10 @@ services:
     image: grpc-reverse-proxy-sample-img
     container_name: grpc-reverse-proxy-sample-cont
     ports:
-      - 9998:9998
+      - 9998:9998 # gRPC Client and Server
+      - 9997:9997 # RESTful API
     command: bash
     tty: true
     volumes:
-      - ./build/docker/.bashrc:/root/.bashrc
+      - ./build/docker/bash.bashrc:/etc/bash.bashrc
       - .:/reverse-proxy-sample
