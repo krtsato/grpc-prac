@@ -13,13 +13,13 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+type userService struct{}
+
 // DB から取得したものと仮定する
 const (
 	USERS = map[string]string{"12345abcde": "taro", "zxcvb09876": "hanako"}
 	PORT  = "9998"
 )
-
-type userService struct{}
 
 // ユーザ一覧取得
 func (e *userService) ListUsers(ctx context.Context, req *userpb.ListUserRequest) (*userpb.ListUsersResponses, error) {
@@ -31,12 +31,12 @@ func (e *userService) ListUsers(ctx context.Context, req *userpb.ListUserRequest
 	return &userpb.ListUsersResponses{Users: users}, nil
 }
 
-// 1ユーザの取得(本来は詳細情報を付与して返す)
+// ユーザ一人取得
 func (e *userService) GetUser(ctx context.Context, req *userpb.GetUserRequest) (*userpb.User, error) {
 	return &userpb.User{EncryptedId: req.EncryptedId, Name: USERS[req.EncryptedId]}, nil
 }
 
-// ユーザの作成
+// ユーザ作成
 func (e *userService) CreateUser(ctx context.Context, req *userpb.CreateUserRequest) (*userpb.User, error) {
 	encrypedId := GetRandString(10)
 	USERS[encrypedId] = req.Name
@@ -44,7 +44,7 @@ func (e *userService) CreateUser(ctx context.Context, req *userpb.CreateUserRequ
 	return &userpb.User{EncryptedId: encrypedId, Name: req.Name}, nil
 }
 
-// ユーザの更新
+// ユーザ更新
 func (e *userService) UpdateUser(ctx context.Context, req *userpb.UpdateUserRequest) (*userpb.User, error) {
 	USERS[req.EncryptedId] = req.Name
 
@@ -57,7 +57,7 @@ func (e *userService) DeleteUser(ctx context.Context, req *userpb.DeleteUserRequ
 	return &userpb.Empty{}, nil
 }
 
-// 乱数の生成(encrypted_id用)
+// encrypted_id の乱数生成
 func GetRandString(n int) string {
 	var letterRunes = []rune("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
@@ -68,23 +68,33 @@ func GetRandString(n int) string {
 	return string(b)
 }
 
-func main() {
+func run() error {
 	rand.Seed(time.Now().UnixNano())
 
 	var port string
-	flag.StringVar(&port, "port", PORT, "")
+	flag.StringVar(&port, "port: ", PORT, "")
 	flag.Parse()
 
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 
 	server := grpc.NewServer()
 	userpb.RegisterUserServiceServer(server, &userService{})
+
+	// 実行中のサーバから protocol buffer の定義を取得・実行できる
 	reflection.Register(server)
 
 	if err := server.Serve(listen); err != nil {
-		log.Fatalln(err)
+		return err
+	}
+
+	return nil
+}
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatalln(err.Error())
 	}
 }
