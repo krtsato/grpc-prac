@@ -16,7 +16,7 @@ import (
 
 const HOST = "localhost:9998"
 
-// 全ユーザ取得
+// ユーザ一覧取得
 func ListUser(conn *grpc.ClientConn) {
 	client := userpb.NewUserServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -32,7 +32,7 @@ func ListUser(conn *grpc.ClientConn) {
 	}
 }
 
-// 1ユーザ取得
+// ユーザ一人取得
 func GetUser(conn *grpc.ClientConn, encryptedId string) {
 	client := userpb.NewUserServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
