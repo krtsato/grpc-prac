@@ -1,0 +1,4 @@
+.DS_Store
+build/local/Dockerfile
+docker-compose.yml
+README.md
